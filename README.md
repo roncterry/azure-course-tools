@@ -282,3 +282,20 @@ upload-vhd-to-azure.sh <VHD_FILE> <STORAGE_ACCOUNT>:<CONTAINER>
 
 Where `<VHD_FILE>` is the VHD file you want to upload,  `<STORAGE_ACCOUNT>` is the Storage Account name that contains the Container and `<CONTAINER>` is the name of the Container to upload the VHD file to.
 
+
+
+# Use the *step-01.sh* Script
+
+## Intro:
+
+This command is start of the process of creating a course lab environment in Azure. It is a wrapper around the `get-azure-storage-key.sh`, `create-azure-fileshare.sh` and `upload-to-azure-fileshare.sh` scripts that calls them in order using parameters that are defined in a `course-environment.cfg` file.
+
+It covers the first steps required to create a course lab environment in Azure by creating a CIFS File Share and uploading the lab environment installer package archive files to the CIFS File Share. It is assumed that the lab machine vhd disk image file that will be used as the template for the course template disk image has already been uploaded.
+
+When the script exits it displays the remaining steps required to finish creating/configuring the lab environment, teach the course and then clean up and remove the lab environment form Azure.
+
+
+## Usage:
+```
+step-01.sh <COURSE_ENVIRONMENT_CONFIG_FILE> 
+```
