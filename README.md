@@ -146,12 +146,11 @@ No default value. This is a required value.
 
 This command is used to create a course lab environment in Azure as defined by a `course-environment.cfg` file: 
 
-
-
 ## Usage:
 ```
 create-course-in-azure.sh <COURSE_ENVIRONMENT_CONFIG_FILE> 
 ```
+
 
 
 # Use the *delete-course-env-from-azure.sh* Script
@@ -160,10 +159,126 @@ create-course-in-azure.sh <COURSE_ENVIRONMENT_CONFIG_FILE>
 
 This command is used to delete a course lab environment from Azure that was created by the `create-course-env-in-azure.sh` script. It requires you to provide `course-environment.dfg` config file. 
 
-
-
 ## Usage:
 ```
 delete-course-env-from-azure.sh <COURSE_ENVIRONMENT_CONFIG_FILE> 
 ```
+
+
+
+# Use the *launch-course-vms.sh* Script
+
+## Intro:
+
+This command is used to launch all of the student course VMs for a course lab environment. The student specific VM config files (`vm-config.azvm`) files should all reside in a single directory using a directory structure like the following: 
+
+```
+<course>/
+        |-student01.azvm
+        |-student01.azvm
+        |-student03.azvm
+        |-...
+```
+
+## Usage:
+```
+launch-course-vms.sh <COURSE_VM_FILE_DIRECTORY> 
+```
+
+
+
+# Use the *remove-course-vms.sh* Script
+
+## Intro:
+
+This command is used to remove all of the student course VMs for a course lab environment that were launched using the launch-course-vms.sh script. Yo must provide the script with the same directory containing the VM config files as was used to launch the VM. 
+
+
+## Usage:
+```
+remove-course-vms.sh <COURSE_VM_FILE_DIRECTORY> 
+```
+
+
+
+# Use the *get-azure-storage-key.sh* Script
+
+## Intro:
+
+This command is used to retrieve the storage key for an Azure Storage Account. The key can then be used to access file in the storage account such as mounting an Azure CIFS File Share. 
+
+
+## Usage:
+```
+get-azure-storage-key.sh <STORAGE_ACCOUNT> 
+```
+
+Where `<STORAGE_ACCOUNT>` is the name of the Storage Account that's key you are retrieving.
+
+
+
+
+# Use the *create-azure-fileshare.sh* Script
+
+## Intro:
+
+This command is used to create a CIFS File Share in an Azure Storage Account that will be used to contain the lab environment installer package archive files. This file share will later be mounted in the template VM to install the course lab environment. 
+
+
+## Usage:
+```
+create-azure-fileshare.sh <STORAGE_ACCOUNT>:<FILE_SHARE> 
+```
+
+Where `<STORAGE_ACCOUNT>` is the Storage Account name that will contain the CIFS File Share and `<FILE_SHARE>` is the name of the File Share to be created.
+
+
+
+# Use the *mount-azure-fileshare.sh* Script
+
+## Intro:
+
+This command is used to mount the Azure CIFS File Share on a Linux host. It is intended to be run from within the template VM when it is being configured but it could also theoretically be run on any Linux host that has Internet access to mount the Azure CIFS File Share. 
+
+
+## Usage:
+```
+mount-azure-fileshare.sh <STORAGE_ACCOUNT>:<FILE_SHARE> <MOUNT_POINT> 
+```
+
+Where `<STORAGE_ACCOUNT>` is the Storage Account name that contains the CIFS File Share, `<FILE_SHARE>` is the name of the File Share to be mounted and `<MOUNT_POINT>` is the mount point on which to mount the share.
+
+
+
+# Use the *upload-to-azure-fileshare.sh* Script
+
+## Intro:
+
+This command is used to upload file in a specified directory to an Azure CIFS File Share using the Azure API rather then the CIFS protocol. 
+
+
+## Usage:
+```
+upload-to-azure-fileshare.sh <UPLOAD_FILES_DIR> <STORAGE_ACCOUNT>:<FILE_SHARE> 
+```
+
+Where `<UPLOAD_FILE_DIR>` is the directory containing the files you want to upload,  `<STORAGE_ACCOUNT>` is the Storage Account name that contains the CIFS File Share and `<FILE_SHARE>` is the name of the File Share to upload the files to.
+
+
+
+# Use the *upload-vhd-to-azure.sh* Script
+
+## Intro:
+
+This command is used to upload a vhd disk image as a storage blob to a Container in an Azure Storage Account. 
+
+Note: The vhd file must be of a specific size (30GB) and formatted as a fixed vhd file for it to be recognized as a disk image file.
+
+
+## Usage:
+```
+upload-vhd-to-azure.sh <VHD_FILE> <STORAGE_ACCOUNT>:<CONTAINER> 
+```
+
+Where `<VHD_FILE>` is the VHD file you want to upload,  `<STORAGE_ACCOUNT>` is the Storage Account name that contains the Container and `<CONTAINER>` is the name of the Container to upload the VHD file to.
 
