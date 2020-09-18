@@ -21,7 +21,9 @@ COURSE_RESOURCE_GROUP_BASE_NAME=
 # Storage Account Base Name where new disks will be created
 #
 # The region name will be appended to this name to produce the actual
-# Course Storage Account Name for that particular region
+# Course Storage Account Name for that particular region.
+#
+# This name must be a valid DNS name and therefore should be all lower case and contain no spaces and no dashes or underscores.
 #
 # Hint: Set this to something that matches the Resource Group and is unique
 #
@@ -51,7 +53,7 @@ COURSE_STORAGE_CONTAINER_NAME="course-disks"
 IMAGE_SOURCE_RESOURCE_GROUP="Labmachine_Image"
 
 
-# Storage account where the source course disk imacge file resides
+# Storage account where the source course disk image file resides
 #
 # Default: labmachineimages
 #
@@ -100,7 +102,7 @@ SOURCE_FILESHARE_STORAGE_ACCOUNT="susecourseinstallers"
 # File Share from which the course installer was installed into the 
 # course source disk image
 #
-# No defuault value. This is a required value.
+# No default value. This is a required value.
 #
 SOURCE_FILESHARE_NAME=""
 
@@ -120,7 +122,7 @@ SOURCE_FILESHARE_URI="cifs://${SOURCE_FILESHARE_STORAGE_ACCOUNT}.file.core.windo
 
 # Directory containing the course installer archive files to be uploaded 
 #
-# No defuault value. This is a required value.
+# No default value. This is a required value.
 #
 COURSE_INSTALLER_ARCHIVE_FILES_DIR=""
 
