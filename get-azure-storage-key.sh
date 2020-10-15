@@ -21,7 +21,7 @@ get_storage_account() {
 main() {
   get_storage_account $*
 
-  az storage account keys list --account-name ${AZURE_STORAGE_ACCOUNT} --output-table | grep key 1 | awk '{ print $3 }'
+  az storage account keys list --account-name ${AZURE_STORAGE_ACCOUNT} --output table | grep "key1" | awk '{ print $3 }'
 }
 
 main $*

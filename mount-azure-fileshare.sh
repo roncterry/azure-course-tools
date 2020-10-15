@@ -146,7 +146,7 @@ main() {
 
   local MOUNT_OPTIONS="vers=3.0,username=${AZURE_STORAGE_ACCOUNT},password=${AZURE_STORAGE_KEY},dir_mode=0777,file_mode=0777,serverino"
 
-  mount -t cifs //${AZURE_STORAGE_ACCOUNT}/file.core.windows.net/${AZURE_FILE_SHARE} ${MOUNT_POINT} -o ${MOUNT_OPTIONS}
+  mount -t cifs //${AZURE_STORAGE_ACCOUNT}.file.core.windows.net/${AZURE_FILE_SHARE} ${MOUNT_POINT} -o ${MOUNT_OPTIONS}
   echo
 
   mount | grep ${AZURE_FILE_SHARE}
