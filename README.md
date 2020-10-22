@@ -4,7 +4,26 @@ The tools in this project help you to more easily manage training course lab env
 
 Additional tools that are useful to use in conjunction with these tools (also defined in the **https://github.com/roncterry/create-azure-vm** git repository).
 
+## TL:DR
+The assumed workflow for using these tools to create, launch and then remove a course is as follows:
 
+1. You have created a template course vhd file (using the **create-azure-vm** tools)
+2. You create a new course environment by making a copy of the **course-environment.cfg.template** file and edit it to match for your new course
+3. You create the new course environment by running: `create-course-env-in-azure.sh <your_course_config_file>` 
+4. You copy your template course vhd file from where it was created to your new course environment: `copy-image-to-new-azure-container.sh <source_storage_account>:<source_container>:<source_image> <destination_storage_account>:<destination_container>` (You can monitor the progress of the copy using: `show-image-copy-status.sh <destination_storage_account>:<destination_container>:<destination_image>`)
+5. Create student VM definition .azvm files (from the **create-azure-vm** tools) for each student and place them all in a directory
+6. Launch the course VMs by running: `launch-course-vms.sh <path_to_dir_containing_student_vm_defs>`
+7. Teach the course
+8. Remove the course VMs by running: `remove-course-vms.sh <path_to_dir_containing_student_vm_defs>`
+9. If no longer needed, remove the course environment in Azure by running: `delete-course-environment-from-azure.sh <your_course_config_file>`
+
+
+There are also tools that can aid you in creating the template vhd file. The could be used in the following order:
+
+1. Create your initial VM for your template course vhd using the **create-azure-vm** tools
+2. Create an Azure CIFS fileshare to upload your course installer into using: `create-azure-fileshare.sh <storage_account>:<file_share>`
+3. Upload your course installer into the fileshare using: `upload-to-azure-fileshare.sh <upload_files_dir> <storage_account>:<file_share>`
+4. Copy the `mount-azure-fileshare.sh` script into your template course VM and use it to mount the Azure CIFS fileshare: `mount-azure-fileshare.sh <storage_account>:<file_share> <mount_point`> 
 
 
 # The course-environment.cfg Configuration File
