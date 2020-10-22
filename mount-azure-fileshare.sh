@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# Version: 1.0.0
-# Date: 2020-09-08
+# Version: 1.0.1
+# Date: 2020-10-22
 
 usage() {
   echo
@@ -130,6 +130,16 @@ check_storage_key() {
   fi
 }
 
+mount_azure_cifs_share() {
+  local MOUNT_OPTIONS="vers=3.0,username=${AZURE_STORAGE_ACCOUNT},password=${AZURE_STORAGE_KEY},dir_mode=0777,file_mode=0777,serverino"
+
+  mount -t cifs //${AZURE_STORAGE_ACCOUNT}.file.core.windows.net/${AZURE_FILE_SHARE} ${MOUNT_POINT} -o ${MOUNT_OPTIONS}
+  echo
+
+  mount | grep ${AZURE_FILE_SHARE}
+  echo
+}
+
 ##############################################################################
 
 main() {
@@ -144,13 +154,7 @@ main() {
   check_cli_args $*
   check_storage_key $*
 
-  local MOUNT_OPTIONS="vers=3.0,username=${AZURE_STORAGE_ACCOUNT},password=${AZURE_STORAGE_KEY},dir_mode=0777,file_mode=0777,serverino"
-
-  mount -t cifs //${AZURE_STORAGE_ACCOUNT}.file.core.windows.net/${AZURE_FILE_SHARE} ${MOUNT_POINT} -o ${MOUNT_OPTIONS}
-  echo
-
-  mount | grep ${AZURE_FILE_SHARE}
-  echo
+  mount_azure_cifs_share
 }
 
 ##############################################################################

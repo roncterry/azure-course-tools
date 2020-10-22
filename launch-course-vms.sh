@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# Version: 1.0.0
-# Date: 2020-09-16
+# Version: 1.0.1
+# Date: 2020-10-22
 
 ### Colors ###
 RED='\e[0;31m'
@@ -21,6 +21,13 @@ LTGRAY='\e[0;37m'
 WHITE='\e[1;37m'
 NC='\e[0m'
 ##############
+
+if which create-azure-vm.sh > /dev/null
+then
+  CREATE_AZURE_VM_TOOLS_PATH="$(dirname $(which create-azure-vm.sh))/"
+else
+  CREATE_AZURE_VM_TOOLS_PATH="$(ls ../ | grep "create-azure-vm")/"
+fi
 
 usage() {
   echo
@@ -55,7 +62,7 @@ fi
 launch_course_vms() {
   for VM_FILE in ${VM_FILE_LIST}
   do
-    ./create-azure-vm.sh ${VM_FILE}
+    ${CREATE_AZURE_VM_TOOLS_PATH}create-azure-vm.sh ${VM_FILE}
     echo
   done
 }

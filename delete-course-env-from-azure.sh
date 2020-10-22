@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# version: 1.0.0
-# date: 2020-09-18
+# version: 1.2.0
+# date: 2020-10-22
 
 ######### Default Values #################
 DEF_REGION_LIST="westus"
@@ -33,6 +33,12 @@ NC='\e[0m'
 usage() {
   echo
   echo "USAGE: ${0} <course_config_file> [delete-source-vhd] [delete-source-fileshare]"
+  echo
+  echo "        The \'delete-source-vhd\' option will delete the original copy of the"
+  echo "        source vhd template."
+  echo
+  echo "        The \'delete-source-fileshare\' option will delete the azure file share"
+  echo "        that was used to upload the course lab environment installer (if used)."
   echo
 }
 

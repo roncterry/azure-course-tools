@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# Version: 1.0.0
-# Date: 2020-09-16
+# Version: 1.0.1
+# Date: 2020-10-22
 
 ### Colors ###
 RED='\e[0;31m'
@@ -21,6 +21,13 @@ LTGRAY='\e[0;37m'
 WHITE='\e[1;37m'
 NC='\e[0m'
 ##############
+
+if which delete-azure-vm.sh > /dev/null
+then
+  CREATE_AZURE_VM_TOOLS_PATH="$(dirname $(which delete-azure-vm.sh))/"
+else
+  CREATE_AZURE_VM_TOOLS_PATH="$(ls ../ | grep "delete-azure-vm")/"
+fi
 
 usage() {
   echo
@@ -55,7 +62,7 @@ fi
 delete_course_vms() {
   for VM_FILE in ${VM_FILE_LIST}
   do
-    ./delete-azure-vm.sh ${VM_FILE} delete-vhd
+    ${CREATE_AZURE_VM_TOOLS_DIR}delete-azure-vm.sh ${VM_FILE} delete-vhd
     echo
   done
 }

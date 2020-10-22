@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# Version: 1.0.0
-# Date: 2020-09-08
+# Version: 1.0.1
+# Date: 2020-10-22
 
 usage() {
   echo
@@ -134,6 +134,14 @@ check_storage_key() {
   fi
 }
 
+upload_to_azure_fileshare() {
+  az storage file upload-batch \
+    --account-name ${AZURE_STORAGE_ACCOUNT} \
+    --account-key ${AZURE_STORAGE_KEY} \
+    --destination ${AZURE_FILE_SHARE} \
+    --source ${SOURCE_FILES_DIR}
+}
+
 ##############################################################################
 
 main() {
@@ -142,7 +150,7 @@ main() {
 
   #az login
   
-  az storage file upload-batch --account-name ${AZURE_STORAGE_ACCOUNT} --account-key ${AZURE_STORAGE_KEY} --destination ${AZURE_FILE_SHARE} --source ${SOURCE_FILES_DIR}
+  upload_to_azure_fileshare
   echo
 }
 

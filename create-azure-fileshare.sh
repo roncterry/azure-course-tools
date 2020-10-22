@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# Version: 1.0.0
-# Date: 2020-09-08
+# Version: 1.0.1
+# Date: 2020-10-22
 
 usage() {
   echo
@@ -111,6 +111,14 @@ check_storage_key() {
   fi
 }
 
+create_azure_fileshare() {
+  az storage share create \
+    --account-name ${AZURE_STORAGE_ACCOUNT} \
+    --account-key ${AZURE_STORAGE_KEY} \
+    --name ${AZURE_FILE_SHARE} \
+    --quota 1024 \
+    --output none
+}
 ##############################################################################
 
 main() {
@@ -119,7 +127,7 @@ main() {
 
   #az login
   
-  az storage share create --account-name ${AZURE_STORAGE_ACCOUNT} --account-key ${AZURE_STORAGE_KEY} --name ${AZURE_FILE_SHARE} --quota 1024 --output none
+  create_azure_fileshare
   echo
 }
 

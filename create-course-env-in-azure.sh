@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# version: 1.0.0
-# date: 2020-09-18
+# version: 1.1.0
+# date: 2020-10-22
 
 ######### Default Values #################
 DEF_REGION_LIST="westus"
@@ -32,7 +32,12 @@ NC='\e[0m'
 
 usage() {
   echo
-  echo "USAGE: ${0} <course_config_file>"
+  echo "USAGE: ${0} <course_config_file> [copy-template-vhd]"
+  echo
+  echo "       If you would like to also copy the temaple vhd file into the new"
+  echo "       storage account container, enter as the second option to the command:"
+  echo
+  echo "        copy-template-vhd"
   echo
 }
 
@@ -52,6 +57,11 @@ else
   else
     source ${COURSE_CONFIG_FILE}
   fi
+fi
+
+if echo ${*} | grep -q copy-template-vhd
+then
+  COPY_TEMPLATE_VHD=Y
 fi
 
 #############################################################################
@@ -166,7 +176,12 @@ main() {
     create_new_resource_group
     create_new_storage_account
     create_new_storage_container
-    copy_source_disk_image
+
+    case ${COPY_TEMPLATE_VHD} in
+      Y)
+        copy_source_disk_image
+      ;;
+    esac
 
     echo
     echo -e "${LTBLUE}---------------------------------------------------------------------------${NC}"

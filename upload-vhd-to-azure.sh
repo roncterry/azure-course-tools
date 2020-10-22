@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# Version: 2.0.0
-# Date: 2020-09-18
+# Version: 2.0.1
+# Date: 2020-10-22
 
 ######### Default Values #################
 DEF_AZURE_STORAGE_ACCOUNT="labmachineimages"
@@ -162,8 +162,12 @@ how_to_show_progress() {
   echo -e "${GRAY}      --account-name ${AZURE_STORAGE_ACCOUNT} \ ${NC}"
   echo -e "${GRAY}      -c ${AZURE_STORAGE_CONTAINER_NAME} \ ${NC}"
   echo -e "${GRAY}      -n ${VHD_FILE} \ ${NC}"
-  echo -e "${GRAY}      --query \'progress:properties.copy.progress}\' \ ${NC}"
+  echo -e "${GRAY}      --query \'{progress:properties.copy.progress}\' \ ${NC}"
   echo -e "${GRAY}      --output table${NC}"
+  echo 
+  echo -e "${ORANGE}     Or${NC}"
+  echo 
+  echo -e "${GRAY}    watch ./show-image-copy-status.sh ${AZURE_STORAGE_ACCOUNT}:${AZURE_STORAGE_CONTAINER_NAME}:${VHD_FILE} \ ${NC}"
   echo 
   echo -e "${LTPURPLE}     (Ctrl+c quits the command)${NC}"
   echo 

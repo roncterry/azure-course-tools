@@ -161,7 +161,7 @@ This command is used to delete a course lab environment from Azure that was crea
 
 ## Usage:
 ```
-delete-course-env-from-azure.sh <COURSE_ENVIRONMENT_CONFIG_FILE> 
+delete-course-env-from-azure.sh <COURSE_ENVIRONMENT_CONFIG_FILE> [delete-source-vhd] [delete-source-fileshare] 
 ```
 
 
@@ -216,6 +216,34 @@ get-azure-storage-key.sh <STORAGE_ACCOUNT>
 Where `<STORAGE_ACCOUNT>` is the name of the Storage Account that's key you are retrieving.
 
 
+
+# Use the *copy-image-to-new-azure-container.sh* Script
+
+## Intro:
+
+This command is used to copy an image (blob) from one storage container to another. The source and destination container can be in different storage accounts/resource groups/regions. 
+
+
+## Usage:
+```
+copy-image-to-new-azure-container.sh <SOURCE_STORAGE_ACCOUNT>:<SOURCE_CONTAINER>:<SOURCE_FILE> <DESTINATION_STORAGE_ACCOUNT>:<DESTINATION_CONTAINER>[:<DESTINATION_FILE>] 
+```
+
+The DESTINATION_FILE is optional. If not supplied it will be named the same as the source file.
+
+
+
+# Use the *show-image-copy-status.sh* Script
+
+## Intro:
+
+This command is used to display the status of an image (blob) copy job. 
+
+
+## Usage:
+```
+show-image-copy-status.sh <DESTINATION_STORAGE_ACCOUNT>:<DESTINATION_CONTAINER>:<DESTINATION_FILE> 
+```
 
 
 # Use the *create-azure-fileshare.sh* Script
