@@ -15,7 +15,7 @@ The assumed workflow for using these tools to create, launch and then remove a c
 6. Launch the course VMs by running: `launch-course-vms.sh <path_to_dir_containing_student_vm_defs>`
 7. Teach the course
 8. Remove the course VMs by running: `remove-course-vms.sh <path_to_dir_containing_student_vm_defs>`
-9. If no longer needed, remove the course environment in Azure by running: `delete-course-environment-from-azure.sh <your_course_config_file>`
+9. If no longer needed, remove the course environment in Azure by running: `remove-course-environment-from-azure.sh <your_course_config_file>`
 
 
 There are also tools that can aid you in creating the template vhd file. The could be used in the following order:
@@ -172,7 +172,7 @@ create-course-in-azure.sh <COURSE_ENVIRONMENT_CONFIG_FILE>
 
 
 
-# Use the *delete-course-env-from-azure.sh* Script
+# Use the *remove-course-env-from-azure.sh* Script
 
 ## Intro:
 
@@ -180,7 +180,7 @@ This command is used to delete a course lab environment from Azure that was crea
 
 ## Usage:
 ```
-delete-course-env-from-azure.sh <COURSE_ENVIRONMENT_CONFIG_FILE> [delete-source-vhd] [delete-source-fileshare] 
+remove-course-env-from-azure.sh <COURSE_ENVIRONMENT_CONFIG_FILE> [delete-source-vhd] [delete-source-fileshare] 
 ```
 
 
