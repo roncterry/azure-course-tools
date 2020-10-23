@@ -8,8 +8,8 @@ Additional tools that are useful to use in conjunction with these tools (also de
 The assumed workflow for using these tools to create, launch and then remove a course is as follows:
 
 1. You have created a template course vhd file (using the **create-azure-vm** tools)
-2. You create a new course environment by making a copy of the **course-environment.cfg.template** file and edit it to match for your new course
-3. You create the new course environment by running: `create-course-env-in-azure.sh <your_course_config_file>` 
+2. You create a new course environment by making a copy of the **course-environment.cfg.template** file and edit it to match for your new course (note that you can specify multiple regions in this config file)
+3. You create the new course environment by running: `create-course-env-in-azure.sh <your_course_config_file>` (If you want to automatically start copying your template vhd into the course environment, add the `copy-template-vhd` option to the end of this command. Also, if you specified multiple regions in the course config file these operations will be performed in all specified regions.)
 4. You copy your template course vhd file from where it was created to your new course environment: `copy-image-to-new-azure-container.sh <source_storage_account>:<source_container>:<source_image> <destination_storage_account>:<destination_container>` (You can monitor the progress of the copy using: `show-image-copy-status.sh <destination_storage_account>:<destination_container>:<destination_image>`)
 5. Create student VM definition .azvm files (from the **create-azure-vm** tools) for each student and place them all in a directory
 6. Launch the course VMs by running: `launch-course-vms.sh <path_to_dir_containing_student_vm_defs>`
