@@ -4,7 +4,7 @@ The tools in this project help you to more easily manage training course lab env
 
 Additional tools that are useful to use in conjunction with these tools (also defined in the **https://github.com/roncterry/create-azure-vm** git repository).
 
-## TL:DR
+## TL;DR
 The assumed workflow for using these tools to create, launch and then remove a course is as follows:
 
 1. You have created a template course vhd file (using the **create-azure-vm** tools)
