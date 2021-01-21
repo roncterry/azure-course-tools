@@ -167,16 +167,18 @@ This command is used to create a course lab environment in Azure as defined by a
 
 ## Usage:
 ```
-create-course-in-azure.sh <COURSE_ENVIRONMENT_CONFIG_FILE> 
+create-course-in-azure.sh <COURSE_ENVIRONMENT_CONFIG_FILE> [copy-template-vhd] 
 ```
 
+If you use the option `copy-template-vhd` the script will copy the disk image file specified in the `IMAGE_SOURCE_IMAGE_FILE` variable in the `course-environment.cfg` file to the newly created storage account containers in the regions specified in that same config file.
 
 
 # Use the *remove-course-env-from-azure.sh* Script
 
 ## Intro:
 
-This command is used to delete a course lab environment from Azure that was created by the `create-course-env-in-azure.sh` script. It requires you to provide `course-environment.dfg` config file. 
+This command is used to delete a course lab environment from Azure that was created by the `create-course-env-in-azure.sh` script. It requires you to provide `course-environment.cfg` config file. 
+
 
 ## Usage:
 ```
@@ -261,8 +263,10 @@ This command is used to display the status of an image (blob) copy job.
 
 ## Usage:
 ```
-show-image-copy-status.sh <DESTINATION_STORAGE_ACCOUNT>:<DESTINATION_CONTAINER>:<DESTINATION_FILE> 
+show-image-copy-status.sh <DESTINATION_STORAGE_ACCOUNT>:<DESTINATION_CONTAINER>:<DESTINATION_FILE> [simple] 
 ```
+
+If you use the `simple` option it will display the progress on a single line. If not it will be displayed on multiple lines.
 
 
 # Use the *create-azure-fileshare.sh* Script
