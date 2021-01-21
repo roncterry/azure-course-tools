@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# Version: 1.0.1
-# Date: 2020-10-22
+# Version: 1.0.2
+# Date: 2021-01-21
 
 usage() {
   echo
@@ -84,9 +84,25 @@ check_cli_args() {
   fi
 }
 
+check_azure_storage_key() {
+  if [ -z ${AZURE_STORAGE_KEY} ]
+  then
+    if [ -e ./azure_storage_key.txt ]
+    then
+      export AZURE_STORAGE_KEY="$(cat ./azure_storage_key.txt)"
+    fi
+  fi
+
+  if [ -z ${AZURE_STORAGE_KEY} ]
+  then
+    export AZURE_STORAGE_KEY="$(az storage account keys list --account-name ${DESTINATION_STORAGE_ACCOUNT} --output table 2> /dev/null | grep "key1" | awk '{ print $3 }')"
+  fi
+}
+
 display_blob_copy_status() {
   az storage blob show \
     --account-name ${DESTINATION_STORAGE_ACCOUNT} \
+    --account-key ${AZURE_STORAGE_KEY} \
     --container-name ${DESTINATION_STORAGE_CONTAINER} \
     --name ${DESTINATION_FILE} \
     --query '{progress:properties.copy.progress}' \
@@ -105,6 +121,7 @@ display_blob_copy_status_one_line() {
 
 main() {
   check_cli_args $*
+  check_azure_storage_key $*
 
   #az login
   

@@ -1,11 +1,11 @@
 #!/bin/bash
 #
-# Version: 1.0.0
-# Date: 2020-10-22
+# Version: 1.0.2
+# Date: 2021-01-21
 
 usage() {
   echo
-  echo "USAGE: ${0} <source_storage_container>:<container>:<file> <destination_storage_account>:<container>[:<file>]"
+  echo "USAGE: ${0} <source_storage_account>:<container>:<file> <destination_storage_account>:<container>[:<file>]"
   echo
 }
 
@@ -147,41 +147,52 @@ check_storage_key() {
   then
     if [ -e ./azure_storage_key.txt ]
     then
+      echo "Retrieving destination storage key from file: ./azure_storage_key.txt"
+      echo
       export AZURE_STORAGE_KEY="$(cat ./azure_storage_key.txt)"
       if [ -z ${AZURE_STORAGE_KEY} ]
       then
+        echo "Retrieval from file faild.  Trying a different way ..."
         echo
-        echo "ERROR: The storage key file is empty."
-        echo "       Make sure it contains a valid storage key."
-        echo "       Exiting."
+      else
+        echo "Destination storage key retrieved ( ${AZURE_STORAGE_KEY} )"
         echo
-        usage
-        exit
       fi
-    else
-      echo
-      echo "ERROR: No storage key found."
-      echo
-      echo "       Either store the Azure storage key in the "
-      echo "       environment variable: AZURE_STORAGE_KEY"
-      echo
-      echo "       Or "
-      echo
-      echo "       Save it in a file: ./azure_storage_key.txt"
-      echo
- 
-      exit
     fi
+  fi
+
+  if [ -z ${AZURE_STORAGE_KEY} ]
+  then
+    echo "Retrieving destination storage key from API"
+    echo
+    export AZURE_STORAGE_KEY="$(az storage account keys list --account-name ${AZURE_STORAGE_ACCOUNT} --output table 2> /dev/null | grep "key1" | awk '{ print $3 }')"
+    echo
+    echo "Destination storage key retrieved ( ${AZURE_STORAGE_KEY} )"
+    echo
+  fi
+
+  if [ -z ${SOURCE_AZURE_STORAGE_KEY} ]
+  then
+    echo "Retrieving source storage key from API"
+    echo
+    export SOURCE_AZURE_STORAGE_KEY="$(az storage account keys list --account-name ${SOURCE_AZURE_STORAGE_ACCOUNT} --output table 2> /dev/null | grep "key1" | awk '{ print $3 }')"
+    echo "Source storage key retrieved ( ${SOURCE_AZURE_STORAGE_KEY} )"
+    echo
   fi
 }
 
 copy_blob_to_new_container() {
+  echo "COMMAND: az storage blob copy start --account-name ${DESTINATION_STORAGE_ACCOUNT} --account-key ${AZURE_STORAGE_KEY} --destination-container ${DESTINATION_STORAGE_CONTAINER} --destination-blob ${DESTINATION_FILE} --source-account-name ${SOURCE_STORAGE_ACCOUNT} --source-account-key ${SOURCE_STORAGE_ACCOUNT_KEY} --source-container ${SOURCE_STORAGE_CONTAINER} --source-blob ${SOURCE_FILE}"
+  echo
   az storage blob copy start \
     --account-name ${DESTINATION_STORAGE_ACCOUNT} \
     --account-key ${AZURE_STORAGE_KEY} \
-    --destination-container ${DESTINATION_CONTAINER} \
+    --destination-container ${DESTINATION_STORAGE_CONTAINER} \
     --destination-blob ${DESTINATION_FILE} \
-    --source-uri ${SOURCE_URI}
+    --source-account-name ${SOURCE_STORAGE_ACCOUNT} \
+    --source-account-key ${SOURCE_AZURE_STORAGE_KEY} \
+    --source--container ${SOURCE_STORAGE_CONTAINER} \
+    --source-blob ${SOURCE_FILE}
   echo
 }
 
@@ -197,7 +208,7 @@ main() {
 
   echo "To see the status of the copy, run the following command:"
   echo
-  echo "show-image-copy-status.sh ${DESTINATION_STORAGE_ACCOUNT}:${DESTINATION_CONTAINER}:${DESTINATION_FILE}"
+  echo "./show-image-copy-status.sh ${DESTINATION_STORAGE_ACCOUNT}:${DESTINATION_STORAGE_CONTAINER}:${DESTINATION_FILE}"
   echo
 }
 
