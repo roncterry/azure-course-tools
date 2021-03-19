@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# version: 1.2.0
-# date: 2020-10-22
+# version: 1.3.0
+# date: 2021-03-18
 
 ######### Default Values #################
 DEF_REGION_LIST="westus"
@@ -90,10 +90,9 @@ set_default_values() {
 }
 
 delete_resource_group() {
-  echo -e "${LTBLUE}Deleteing the resource group named: ${GRAY}${COURSE_RESOURCE_GROUP_BASE_NAME}-${REGION}${NC}"
-  az group create \
-    -l ${REGION} \
-    -n ${COURSE_RESOURCE_GROUP_BASE_NAME}-${REGION}
+  echo -e "${LTBLUE}Deleting the resource group named: ${GRAY}${COURSE_RESOURCE_GROUP_BASE_NAME}-${REGION}${NC}"
+  az group delete \
+    --resource-group ${COURSE_RESOURCE_GROUP_BASE_NAME}-${REGION}
   echo
 }
 
@@ -123,7 +122,7 @@ delete_source_fileshare() {
   az storage share delete \
     --name ${SOURCE_FILESHARE_NAME} \
     --account-name ${SOURCE_FILESHARE_STORAGE_ACCOUNT} \
-    --account-key ${SOURCE_FILESHARE_STORAGE_KEY} \
+    --account-key ${SOURCE_FILESHARE_STORAGE_KEY} \packman.inode.at
     --query '{jobID:id}' --output table
 }
 
@@ -131,7 +130,7 @@ delete_source_fileshare() {
 
 main() {
   echo -e "${LTBLUE}===========================================================================${NC}"
-  echo -e "${LTBLUE}               Creating new course environment in Azure${NC}"
+  echo -e "${LTBLUE}               Deleting course environment from Azure${NC}"
   echo -e "${LTBLUE}===========================================================================${NC}"
   echo
 
@@ -144,7 +143,7 @@ main() {
     echo -e "${LTBLUE}---------------------${NC}"
     echo
 
-    delete_new_resource_group
+    delete_resource_group
 
     echo
     echo -e "${LTBLUE}---------------------------------------------------------------------------${NC}"
