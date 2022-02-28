@@ -191,7 +191,7 @@ copy_blob_to_new_container() {
     --destination-blob ${DESTINATION_FILE} \
     --source-account-name ${SOURCE_STORAGE_ACCOUNT} \
     --source-account-key ${SOURCE_AZURE_STORAGE_KEY} \
-    --source--container ${SOURCE_STORAGE_CONTAINER} \
+    --source-container ${SOURCE_STORAGE_CONTAINER} \
     --source-blob ${SOURCE_FILE}
   echo
 }
