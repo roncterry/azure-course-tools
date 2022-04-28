@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# Version: 1.0.2
-# Date: 2021-01-21
+# Version: 1.0.3
+# Date: 2022-04-27
 
 usage() {
   echo
@@ -165,7 +165,7 @@ check_storage_key() {
   then
     echo "Retrieving destination storage key from API"
     echo
-    export AZURE_STORAGE_KEY="$(az storage account keys list --account-name ${AZURE_STORAGE_ACCOUNT} --output table 2> /dev/null | grep "key1" | awk '{ print $3 }')"
+    export AZURE_STORAGE_KEY="$(az storage account keys list --account-name ${AZURE_STORAGE_ACCOUNT} --output table 2> /dev/null | grep "key1" | awk '{ print $4 }')"
     echo
     echo "Destination storage key retrieved ( ${AZURE_STORAGE_KEY} )"
     echo
@@ -175,7 +175,7 @@ check_storage_key() {
   then
     echo "Retrieving source storage key from API"
     echo
-    export SOURCE_AZURE_STORAGE_KEY="$(az storage account keys list --account-name ${SOURCE_AZURE_STORAGE_ACCOUNT} --output table 2> /dev/null | grep "key1" | awk '{ print $3 }')"
+    export SOURCE_AZURE_STORAGE_KEY="$(az storage account keys list --account-name ${SOURCE_AZURE_STORAGE_ACCOUNT} --output table 2> /dev/null | grep "key1" | awk '{ print $4 }')"
     echo "Source storage key retrieved ( ${SOURCE_AZURE_STORAGE_KEY} )"
     echo
   fi

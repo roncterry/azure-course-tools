@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# Version: 1.0.1
-# Date: 2020-10-22
+# Version: 1.0.2
+# Date: 2022-04-27
 
 usage() {
   echo
@@ -24,7 +24,7 @@ get_storage_account() {
 get_storage_account_key() {
   az storage account keys list \
     --account-name ${AZURE_STORAGE_ACCOUNT} \
-    --output table 2> /dev/null | grep "key1" | awk '{ print $3 }'
+    --output table 2> /dev/null | grep "key1" | awk '{ print $4 }'
 }
 
 main() {

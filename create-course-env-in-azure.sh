@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# version: 1.1.0
-# date: 2020-10-22
+# version: 1.1.1
+# date: 2022-04-27
 
 ######### Default Values #################
 DEF_REGION_LIST="westus"
@@ -125,8 +125,8 @@ copy_source_disk_image() {
   echo -e "${LTBLUE}(This will take a while, please be patient)${NC}"
   echo
 
-  local IMAGE_SOURCE_STORAGE_KEY=$(az storage account keys list --resource-group ${IMAGE_SOURCE_RESOURCE_GROUP} --account-name ${IMAGE_SOURCE_STORAGE_ACCOUNT} --output table | grep key1 | sed '{ print $3 }')
-  local REGION_COURSE_STORAGE_KEY=$(az storage account keys list --resource-group ${COURSE_RESOURCE_GROUP_BASE_NAME}-${REGION} --account-name ${COURSE_STORAGE_ACCOUNT_BASE_NAME}${REGION} --output table | grep key1 | sed '{ print $3 }')
+  local IMAGE_SOURCE_STORAGE_KEY=$(az storage account keys list --resource-group ${IMAGE_SOURCE_RESOURCE_GROUP} --account-name ${IMAGE_SOURCE_STORAGE_ACCOUNT} --output table | grep key1 | sed '{ print $4 }')
+  local REGION_COURSE_STORAGE_KEY=$(az storage account keys list --resource-group ${COURSE_RESOURCE_GROUP_BASE_NAME}-${REGION} --account-name ${COURSE_STORAGE_ACCOUNT_BASE_NAME}${REGION} --output table | grep key1 | sed '{ print $4 }')
 
   az storage blob copy start \
     --source-account-name ${IMAGE_SOURCE_STORAGE_ACCOUNT} \
