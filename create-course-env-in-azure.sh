@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# version: 1.1.1
-# date: 2022-04-27
+# version: 1.1.2
+# date: 2022-05-02
 
 ######### Default Values #################
 DEF_REGION_LIST="westus"
@@ -41,7 +41,7 @@ usage() {
   echo
 }
 
-if [ -z ${1} ]
+if [ -z "${1}" ]
 then
   echo -e "${RED}ERROR. You must supply a course config file. Exiting.${NC}"
   echo
@@ -67,27 +67,27 @@ fi
 #############################################################################
 
 set_default_values() {
-  if [ -z ${REGION_LIST} ]
+  if [ -z "${REGION_LIST}" ]
   then
     REGION_LIST="${DEF_REGION_LIST}"
   fi
 
-  if [ -z ${IMAGE_SOURCE_RESOURCE_GROUP} ]
+  if [ -z "${IMAGE_SOURCE_RESOURCE_GROUP}" ]
   then
     IMAGE_SOURCE_RESOURCE_GROUP="${DEF_IMAGE_SOURCE_RESOURCE_GROUP}"
   fi
 
-  if [ -z ${IMAGE_SOURCE_STORAGE_ACCOUNT} ]
+  if [ -z "${IMAGE_SOURCE_STORAGE_ACCOUNT}" ]
   then
     IMAGE_SOURCE_STORAGE_ACCOUNT="${DEF_IMAGE_SOURCE_STORAGE_ACCOUNT}"
   fi
 
-  if [ -z ${IMAGE_SOURCE_CONTAINER_NAME} ]
+  if [ -z "${IMAGE_SOURCE_CONTAINER_NAME}" ]
   then
     IMAGE_SOURCE_CONTAINER_NAME="${DEF_IMAGE_SOURCE_CONTAINER_NAME}"
   fi
 
-  if [ -z ${COURSE_STORAGE_CONTAINER_NAME} ]
+  if [ -z "${COURSE_STORAGE_CONTAINER_NAME}" ]
   then
     COURSE_STORAGE_CONTAINER_NAME="${DEF_COURSE_STORAGE_CONTAINER_NAME}"
   fi
@@ -125,9 +125,19 @@ copy_source_disk_image() {
   echo -e "${LTBLUE}(This will take a while, please be patient)${NC}"
   echo
 
-  local IMAGE_SOURCE_STORAGE_KEY=$(az storage account keys list --resource-group ${IMAGE_SOURCE_RESOURCE_GROUP} --account-name ${IMAGE_SOURCE_STORAGE_ACCOUNT} --output table | grep key1 | sed '{ print $4 }')
-  local REGION_COURSE_STORAGE_KEY=$(az storage account keys list --resource-group ${COURSE_RESOURCE_GROUP_BASE_NAME}-${REGION} --account-name ${COURSE_STORAGE_ACCOUNT_BASE_NAME}${REGION} --output table | grep key1 | sed '{ print $4 }')
+  local IMAGE_SOURCE_STORAGE_KEY=$(az storage account keys list --resource-group ${IMAGE_SOURCE_RESOURCE_GROUP} --account-name ${IMAGE_SOURCE_STORAGE_ACCOUNT} --output table 2> /dev/null | grep key1 | awk '{ print $4 }')
+  if [ -z ${IMAGE_SOURCE_STORAGE_KEY} ]
+  then
+    local IMAGE_SOURCE_STORAGE_KEY=$(az storage account keys list --resource-group ${IMAGE_SOURCE_RESOURCE_GROUP} --account-name ${IMAGE_SOURCE_STORAGE_ACCOUNT} --output table 2> /dev/null | grep key1 | awk '{ print $3 }')
+  fi
 
+  local REGION_COURSE_STORAGE_KEY=$(az storage account keys list --resource-group ${COURSE_RESOURCE_GROUP_BASE_NAME}-${REGION} --account-name ${COURSE_STORAGE_ACCOUNT_BASE_NAME}${REGION} --output table 2> /dev/null | grep key1 | awk '{ print $4 }')
+  if [ -z ${REGION_COURSE_STORAGE_KEY} ]
+  then
+    local REGION_COURSE_STORAGE_KEY=$(az storage account keys list --resource-group ${COURSE_RESOURCE_GROUP_BASE_NAME}-${REGION} --account-name ${COURSE_STORAGE_ACCOUNT_BASE_NAME}${REGION} --output table 2> /dev/null | grep key1 | awk '{ print $3 }')
+  fi
+
+  
   az storage blob copy start \
     --source-account-name ${IMAGE_SOURCE_STORAGE_ACCOUNT} \
     --source-account-key ${IMAGE_SOURCE_STORAGE_KEY} \
@@ -136,7 +146,7 @@ copy_source_disk_image() {
     --account-name ${COURSE_STORAGE_ACCOUNT_BASE_NAME}${REGION} \
     --account-key ${REGION_COURSE_STORAGE_KEY} \
     --destination-container ${COURSE_STORAGE_CONTAINER_NAME} \
-    --destination-blob ${COURSE_IMAGE_FILE} \
+    --destination-blob ${IMAGE_SOURCE_IMAGE_FILE} \
     --query '{jobID:id}' --output table
     
   echo
@@ -145,14 +155,18 @@ copy_source_disk_image() {
   echo -e "${ORANGE}     You can watch the progress of the image file copy job by${NC}"
   echo -e "${ORANGE}     running the following command:${NC}"
   echo
-  echo -e "${GRAY}    watch az storage blob show \ ${NC}"
-  echo -e "${GRAY}      --account-name ${COURSE_STORAGE_ACCOUNT_BASE_NAME}${REGION} \ ${NC}"
-  echo -e "${GRAY}      -c ${COURSE_STORAGE_CONTAINER_NAME} \ ${NC}"
-  echo -e "${GRAY}      -n ${COURSE_IMAGE_FILE} \ ${NC}"
-  echo -e "${GRAY}      --query \'progress:properties.copy.progress}\' \ ${NC}"
-  echo -e "${GRAY}      --output table${NC}"
+  echo -e "${NC}    watch az storage blob show \ ${NC}"
+  echo -e "${NC}      --account-name ${COURSE_STORAGE_ACCOUNT_BASE_NAME}${REGION} \ ${NC}"
+  echo -e "${NC}      -c ${COURSE_STORAGE_CONTAINER_NAME} \ ${NC}"
+  echo -e "${NC}      -n ${IMAGE_SOURCE_IMAGE_FILE} \ ${NC}"
+  echo -e "${NC}      --query \'progress:properties.copy.progress}\' \ ${NC}"
+  echo -e "${NC}      --output table${NC}"
   echo 
   echo -e "${LTPURPLE}     (Ctrl+c quits the command)${NC}"
+  echo
+  echo -e "${ORANGE}     Or you can use the command:${NC}"
+  echo
+  echo -e "${NC}     ./show-image-copy-status.sh ${COURSE_STORAGE_ACCOUNT_BASE_NAME}${REGION}:${COURSE_STORAGE_CONTAINER_NAME}:${IMAGE_SOURCE_IMAGE_FILE}${NC}"
   echo 
 }
 

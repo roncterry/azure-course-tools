@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# version: 1.3.0
-# date: 2021-03-18
+# version: 1.3.1
+# date: 2022-05-02
 
 ######### Default Values #################
 DEF_REGION_LIST="westus"
@@ -42,7 +42,7 @@ usage() {
   echo
 }
 
-if [ -z ${1} ]
+if [ -z "${1}" ]
 then
   echo -e "${RED}ERROR. You must supply a course config file. Exiting.${NC}"
   echo
@@ -63,27 +63,27 @@ fi
 #############################################################################
 
 set_default_values() {
-  if [ -z ${REGION_LIST} ]
+  if [ -z "${REGION_LIST}" ]
   then
     REGION_LIST="${DEF_REGION_LIST}"
   fi
 
-  if [ -z ${IMAGE_SOURCE_RESOURCE_GROUP} ]
+  if [ -z "${IMAGE_SOURCE_RESOURCE_GROUP}" ]
   then
     IMAGE_SOURCE_RESOURCE_GROUP="${DEF_IMAGE_SOURCE_RESOURCE_GROUP}"
   fi
 
-  if [ -z ${IMAGE_SOURCE_STORAGE_ACCOUNT} ]
+  if [ -z "${IMAGE_SOURCE_STORAGE_ACCOUNT}" ]
   then
     IMAGE_SOURCE_STORAGE_ACCOUNT="${DEF_IMAGE_SOURCE_STORAGE_ACCOUNT}"
   fi
 
-  if [ -z ${IMAGE_SOURCE_CONTAINER_NAME} ]
+  if [ -z "${IMAGE_SOURCE_CONTAINER_NAME}" ]
   then
     IMAGE_SOURCE_CONTAINER_NAME="${DEF_IMAGE_SOURCE_CONTAINER_NAME}"
   fi
 
-  if [ -z ${SOURCE_FILESHARE_STORAGE_ACCOUNT} ]
+  if [ -z "${SOURCE_FILESHARE_STORAGE_ACCOUNT}" ]
   then
     SOURCE_FILESHARE_STORAGE_ACCOUNT="${DEF_SOURCE_FILESHARE_STORAGE_ACCOUNT}"
   fi

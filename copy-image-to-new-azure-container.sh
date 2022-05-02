@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# Version: 1.0.3
-# Date: 2022-04-27
+# Version: 1.0.4
+# Date: 2022-05-02
 
 usage() {
   echo
@@ -165,7 +165,11 @@ check_storage_key() {
   then
     echo "Retrieving destination storage key from API"
     echo
-    export AZURE_STORAGE_KEY="$(az storage account keys list --account-name ${AZURE_STORAGE_ACCOUNT} --output table 2> /dev/null | grep "key1" | awk '{ print $4 }')"
+    export AZURE_STORAGE_KEY="$(az storage account keys list --account-name ${DESTINATION_AZURE_STORAGE_ACCOUNT} --output table 2> /dev/null | grep "key1" | awk '{ print $4 }')"
+    if [ -z ${AZURE_STORAGE_KEY} ]
+    then
+      export AZURE_STORAGE_KEY="$(az storage account keys list --account-name ${DESTINATION_AZURE_STORAGE_ACCOUNT} --output table 2> /dev/null | grep "key1" | awk '{ print $3 }')"
+    fi
     echo
     echo "Destination storage key retrieved ( ${AZURE_STORAGE_KEY} )"
     echo
@@ -176,6 +180,10 @@ check_storage_key() {
     echo "Retrieving source storage key from API"
     echo
     export SOURCE_AZURE_STORAGE_KEY="$(az storage account keys list --account-name ${SOURCE_AZURE_STORAGE_ACCOUNT} --output table 2> /dev/null | grep "key1" | awk '{ print $4 }')"
+    if [ -z ${SOURCE_AZURE_STORAGE_KEY} ]
+    then
+      export SOURCE_AZURE_STORAGE_KEY="$(az storage account keys list --account-name ${SOURCE_AZURE_STORAGE_ACCOUNT} --output table 2> /dev/null | grep "key1" | awk '{ print $3 }')"
+    fi
     echo "Source storage key retrieved ( ${SOURCE_AZURE_STORAGE_KEY} )"
     echo
   fi
