@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# Version: 1.0.1
-# Date: 2020-10-22
+# Version: 2.0.0
+# Date: 2022-04-28
 
 ### Colors ###
 RED='\e[0;31m'
@@ -25,6 +25,9 @@ NC='\e[0m'
 if which delete-azure-vm.sh > /dev/null
 then
   CREATE_AZURE_VM_TOOLS_PATH="$(dirname $(which delete-azure-vm.sh))/"
+elif [ -e delete-azure-vm.sh ]
+then
+  CREATE_AZURE_VM_TOOLS_PATH="./"
 else
   CREATE_AZURE_VM_TOOLS_PATH="$(ls ../ | grep "delete-azure-vm")/"
 fi
@@ -62,9 +65,39 @@ fi
 delete_course_vms() {
   for VM_FILE in ${VM_FILE_LIST}
   do
-    ${CREATE_AZURE_VM_TOOLS_DIR}delete-azure-vm.sh ${VM_FILE} delete-vhd
+    ${CREATE_AZURE_VM_TOOLS_PATH}delete-azure-vm.sh ${VM_FILE} delete-vhd
     echo
   done
+}
+
+delete_course_vms_tmux() {
+  for VM_FILE in ${VM_FILE_LIST}
+  do
+    local THIS_VM_NAME=$(grep "^VM_NAME" ${VM_FILE} | cut -d = -f 2 | sed 's/"//g')
+    echo -e "${LTBLUE}Deleting:${NC} ${THIS_VM_NAME}"
+    test -d ./logs || mkdir logs
+    tmux new -s azvm_delete-${THIS_VM_NAME} -d "${CREATE_AZURE_VM_TOOLS_PATH}delete-azure-vm.sh ${VM_FILE} delete-vhd"\; pipe-pane "cat >> logs/azvm_create-${THIS_VM_NAME}.log"
+    #tmux new -s azvm_delete-${THIS_VM_NAME} -d "${CREATE_AZURE_VM_TOOLS_PATH}delete-azure-vm.sh ${VM_FILE} delete-vhd"
+  done
+
+  echo
+  echo -e "${PURPLE}========================================================${NC}"
+  echo -e "${PURPLE}               VM Deletion Sessions${NC}"
+  echo -e "${PURPLE}========================================================${NC}"
+  tmux list-sessions | grep "azvm_delete-" | cut -d : -f 1
+  echo -e "${PURPLE}========================================================${NC}"
+  echo
+  echo -e "${ORANGE}------------------------------------------------------------------------------${NC}"  
+  echo
+  echo -e "${ORANGE}To disply the current sessions enter:${NC} tmux list-sessions | grep \"azvm_delete-\"${NC}"
+  echo
+  echo -e "${ORANGE}To connect to a specific session enter:${NC} tmux attach-session -t <session_name>${NC}"
+  echo -e "${ORANGE} (to detach from the session press:${NC} Ctrl+b d)${NC}" 
+  echo
+  echo -e "${ORANGE}Live logging of VM deletion is sent to the ./logs/ directory.${NC}"
+  echo
+  echo -e "${ORANGE}------------------------------------------------------------------------------${NC}"  
+  echo
 }
 
 main() {
@@ -74,8 +107,12 @@ main() {
   echo -e "${LTBLUE}#######################################################################${NC}"
   echo
 
-  delete_course_vms
-
+  if which tmux > /dev/null
+  then
+    delete_course_vms_tmux
+  else
+    delete_course_vms
+  fi
   echo 
   echo -e "${LTBLUE}#######################################################################${NC}"
   echo -e "${LTBLUE}                              Finished ${GRAY}${VM_NAME}"
