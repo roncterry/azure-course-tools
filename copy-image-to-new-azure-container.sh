@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# Version: 1.0.4
-# Date: 2022-05-02
+# Version: 1.0.5
+# Date: 2022-11-03
 
 usage() {
   echo
@@ -165,26 +165,58 @@ check_storage_key() {
   then
     echo "Retrieving destination storage key from API"
     echo
-    export AZURE_STORAGE_KEY="$(az storage account keys list --account-name ${DESTINATION_AZURE_STORAGE_ACCOUNT} --output table 2> /dev/null | grep "key1" | awk '{ print $4 }')"
+    export AZURE_STORAGE_KEY="$(az storage account keys list --account-name ${DESTINATION_STORAGE_ACCOUNT} --output table 2> /dev/null | grep "key1" | awk '{ print $4 }')"
     if [ -z ${AZURE_STORAGE_KEY} ]
     then
-      export AZURE_STORAGE_KEY="$(az storage account keys list --account-name ${DESTINATION_AZURE_STORAGE_ACCOUNT} --output table 2> /dev/null | grep "key1" | awk '{ print $3 }')"
+      export AZURE_STORAGE_KEY="$(az storage account keys list --account-name ${DESTINATION_STORAGE_ACCOUNT} --output table 2> /dev/null | grep "key1" | awk '{ print $3 }')"
     fi
     echo
+    if ! [ -z ${AZURE_STORAGE_KEY} ]
+    then
     echo "Destination storage key retrieved ( ${AZURE_STORAGE_KEY} )"
+    else
+      echo "ERROR: Failed to retrieve destination storage key. Exiting."
+      echo
+      exit 1
+    fi
     echo
+  fi
+
+  if [ -z ${SOURCE_AZURE_STORAGE_KEY} ]
+  then
+    if [ -e ./source_azure_storage_key.txt ]
+    then
+      echo "Retrieving source storage key from file: ./source_azure_storage_key.txt"
+      echo
+      export SOURCE_AZURE_STORAGE_KEY="$(cat ./source_azure_storage_key.txt)"
+      if [ -z ${SOURCE_AZURE_STORAGE_KEY} ]
+      then
+        echo "Retrieval from file faild.  Trying a different way ..."
+        echo
+      else
+        echo "Source storage key retrieved ( ${SOURCE_AZURE_STORAGE_KEY} )"
+        echo
+      fi
+    fi
   fi
 
   if [ -z ${SOURCE_AZURE_STORAGE_KEY} ]
   then
     echo "Retrieving source storage key from API"
     echo
-    export SOURCE_AZURE_STORAGE_KEY="$(az storage account keys list --account-name ${SOURCE_AZURE_STORAGE_ACCOUNT} --output table 2> /dev/null | grep "key1" | awk '{ print $4 }')"
+    export SOURCE_AZURE_STORAGE_KEY="$(az storage account keys list --account-name ${SOURCE_STORAGE_ACCOUNT} --output table 2> /dev/null | grep "key1" | awk '{ print $4 }')"
     if [ -z ${SOURCE_AZURE_STORAGE_KEY} ]
     then
-      export SOURCE_AZURE_STORAGE_KEY="$(az storage account keys list --account-name ${SOURCE_AZURE_STORAGE_ACCOUNT} --output table 2> /dev/null | grep "key1" | awk '{ print $3 }')"
+      export SOURCE_AZURE_STORAGE_KEY="$(az storage account keys list --account-name ${SOURCE_STORAGE_ACCOUNT} --output table 2> /dev/null | grep "key1" | awk '{ print $3 }')"
     fi
+    if ! [ -z ${SOURCE_AZURE_STORAGE_KEY} ]
+    then
     echo "Source storage key retrieved ( ${SOURCE_AZURE_STORAGE_KEY} )"
+    else
+      echo "ERROR: Failed to retrieve source storage key. Exiting."
+      echo
+      exit 1
+    fi
     echo
   fi
 }

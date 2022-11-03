@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# Version: 1.0.2
-# Date: 2022-04-27
+# Version: 1.0.3
+# Date: 2022-11-03
 
 usage() {
   echo
@@ -22,9 +22,14 @@ get_storage_account() {
 }
 
 get_storage_account_key() {
-  az storage account keys list \
-    --account-name ${AZURE_STORAGE_ACCOUNT} \
-    --output table 2> /dev/null | grep "key1" | awk '{ print $4 }'
+  local AZURE_STORAGE_ACCOUNT_KEY=$(az storage account keys list --account-name ${AZURE_STORAGE_ACCOUNT} --output table 2> /dev/null | grep "key1" | awk '{ print $4 }')
+
+  if [ -z ${AZURE_STORAGE_ACCOUNT_KEY} ]
+  then
+    AZURE_STORAGE_ACCOUNT_KEY=$(az storage account keys list --account-name ${AZURE_STORAGE_ACCOUNT} --output table 2> /dev/null | grep "key1" | awk '{ print $3 }')
+  fi
+
+  echo ${AZURE_STORAGE_ACCOUNT_KEY}
 }
 
 main() {
