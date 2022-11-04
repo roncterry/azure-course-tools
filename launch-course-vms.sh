@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# Version: 2.0.0
-# Date: 2022-04-28
+# Version: 2.0.1
+# Date: 2022-11-04
 
 ### Colors ###
 RED='\e[0;31m'
@@ -22,7 +22,7 @@ WHITE='\e[1;37m'
 NC='\e[0m'
 ##############
 
-if which create-azure-vm.sh > /dev/null
+if which create-azure-vm.sh > /dev/null 2>&1
 then
   CREATE_AZURE_VM_TOOLS_PATH="$(dirname $(which create-azure-vm.sh))/"
 elif [ -e create-azure-vm.sh ]
@@ -84,9 +84,9 @@ launch_course_vms_tmux() {
   do
     local THIS_VM_NAME=$(grep "^VM_NAME" ${VM_FILE} | cut -d = -f 2 | sed 's/"//g')
     echo -e "${LTBLUE}Creating:${NC} ${THIS_VM_NAME}"
-    test -d ./logs || mkdir logs
-    tmux new -s azvm_create-${THIS_VM_NAME} -d "${CREATE_AZURE_VM_TOOLS_PATH}create-azure-vm.sh ${VM_FILE}"\; pipe-pane "cat >> logs/azvm_create-${THIS_VM_NAME}.log"
-    #tmux new -s azvm_create-${THIS_VM_NAME} -d "${CREATE_AZURE_VM_TOOLS_PATH}create-azure-vm.sh ${VM_FILE}"
+    #test -d ./logs || mkdir logs
+    #tmux new -s azvm_create-${THIS_VM_NAME} -d "${CREATE_AZURE_VM_TOOLS_PATH}create-azure-vm.sh ${VM_FILE}"\; pipe-pane "cat >> logs/azvm_create-${THIS_VM_NAME}.log"
+    tmux new -s azvm_create-${THIS_VM_NAME} -d "${CREATE_AZURE_VM_TOOLS_PATH}create-azure-vm.sh ${VM_FILE}"
   done
 
   echo

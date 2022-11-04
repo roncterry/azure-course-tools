@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# Version: 2.0.0
-# Date: 2022-04-28
+# Version: 2.0.1
+# Date: 2022-11-04
 
 ### Colors ###
 RED='\e[0;31m'
@@ -22,7 +22,7 @@ WHITE='\e[1;37m'
 NC='\e[0m'
 ##############
 
-if which delete-azure-vm.sh > /dev/null
+if which delete-azure-vm.sh > /dev/null 2>&1
 then
   CREATE_AZURE_VM_TOOLS_PATH="$(dirname $(which delete-azure-vm.sh))/"
 elif [ -e delete-azure-vm.sh ]
@@ -75,9 +75,9 @@ delete_course_vms_tmux() {
   do
     local THIS_VM_NAME=$(grep "^VM_NAME" ${VM_FILE} | cut -d = -f 2 | sed 's/"//g')
     echo -e "${LTBLUE}Deleting:${NC} ${THIS_VM_NAME}"
-    test -d ./logs || mkdir logs
-    tmux new -s azvm_delete-${THIS_VM_NAME} -d "${CREATE_AZURE_VM_TOOLS_PATH}delete-azure-vm.sh ${VM_FILE} delete-vhd"\; pipe-pane "cat >> logs/azvm_create-${THIS_VM_NAME}.log"
-    #tmux new -s azvm_delete-${THIS_VM_NAME} -d "${CREATE_AZURE_VM_TOOLS_PATH}delete-azure-vm.sh ${VM_FILE} delete-vhd"
+    #test -d ./logs || mkdir logs
+    #tmux new -s azvm_delete-${THIS_VM_NAME} -d "${CREATE_AZURE_VM_TOOLS_PATH}delete-azure-vm.sh ${VM_FILE} delete-vhd" pipe-pane "cat >> logs/azvm_create-${THIS_VM_NAME}.log"
+    tmux new -s azvm_delete-${THIS_VM_NAME} -d "${CREATE_AZURE_VM_TOOLS_PATH}delete-azure-vm.sh ${VM_FILE} delete-vhd"
   done
 
   echo
